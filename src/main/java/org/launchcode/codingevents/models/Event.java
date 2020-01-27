@@ -1,13 +1,15 @@
 package org.launchcode.codingevents.models;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
 
-public class Event {
-    private int id;
-    private static int nextId = 1;
+@Entity
+public class Event extends AbstractEntity{
+
 
     @NotBlank (message="Name is required!")
     @Size(min = 3, max = 50, message="Name must be between 3-50 characters.")
@@ -20,29 +22,28 @@ public class Event {
     @Email(message="Invalid email. Try again.")
     private String contactEmail;
 
-    private EventType type;
+    @ManyToOne
+    @NotNull(message = "Category is required.")
+    private EventCategory eventCategory;
 
-    public Event(String name, String description, String contactEmail, EventType type) {
-        this();
+    // first constructor
+    public Event(String name, String description, String contactEmail, EventCategory eventCategory, String location, Boolean mustRegister) {
         this.name = name;
         this.description = description;
         this.contactEmail= contactEmail;
-        this.type = type;
+        this.eventCategory = eventCategory;
+    }
+    //a second empty constructor only used by the JPA
+    public Event() {}
 
+    public EventCategory getEventCategory() {
+        return eventCategory;
     }
 
-    public Event() {
-        this.id = nextId;
-        nextId++;
+    public void setEventCategory(EventCategory eventCategory) {
+        this.eventCategory = eventCategory;
     }
 
-    public EventType getType() {
-        return type;
-    }
-
-    public void setType(EventType type) {
-        this.type = type;
-    }
     public String getDescription() {
         return description;
     }
@@ -67,27 +68,12 @@ public class Event {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
     @Override
     public String toString() {
         return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return id == event.id;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
 
 
