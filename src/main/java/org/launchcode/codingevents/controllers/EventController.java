@@ -38,7 +38,7 @@ public class EventController {
     public String processCreateEventForm(@ModelAttribute @Valid Event newEvent, Errors errors, Model model) {
         if(errors.hasErrors()) {
             model.addAttribute("title", "Create Event");
-//            model.addAttribute(EventType.values());
+            model.addAttribute("types",EventType.values());
             return "events/create";
         }
         EventData.add(newEvent);
@@ -66,7 +66,7 @@ public class EventController {
     public String displayEditForm(Model model, @PathVariable int eventId) {
         Event event = EventData.getById(eventId);
         model.addAttribute("event", event);
-        model.addAttribute("title","Edit Event: "+ event.getName() +"(id=" + eventId +")");
+        model.addAttribute("title","Edit Event: "+ event.getName());
         return "events/edit";
     }
 
